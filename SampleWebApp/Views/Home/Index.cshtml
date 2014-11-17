@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Owin Cookie Saver</h1>
+    <p class="lead">Owin Cookie Saver sample application.</p>
+    <p>
+        The <a href="https://katanaproject.codeplex.com/workitem/197" target="_blank">Katana bug #19</a> makes
+        cookies set through the Owin API sometimes dissappear, especially in applications that use ASP.NET
+        Sessions. This is a test application for the Owin Cookie Saver middleware that mitigates the bug
+        for cookies set by other owin middleware.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Bug Reproduction</h2>
+        <p>
+            Test sequence to prove that cookies set by authentication middleware dissapears
+        </p>
+        <p>@Html.ActionLink("Start", "Index", "Reproduction", null, new { @class = "btn btn-default" })</p>
+    </div>
+</div>
