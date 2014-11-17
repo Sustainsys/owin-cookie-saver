@@ -15,8 +15,6 @@ namespace Kentor.OwinCookieSaver.Tests
         {
             var app = Substitute.For<IAppBuilder>();
 
-            object middleware = null;
-
             app.UseKentorOwinCookieSaver();
 
             app.Received().Use(typeof(KentorOwinCookieSaverMiddleware));
