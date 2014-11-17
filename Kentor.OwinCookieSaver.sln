@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApp", "SampleWebApp\SampleWebApp.csproj", "{7E6B7891-309C-4014-9B5A-54477B0E22E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentor.OwinCookieSaver", "Kentor.OwinCookieSaver\Kentor.OwinCookieSaver.csproj", "{21CEFCA1-E4EE-4581-8F10-F91C6C6F77E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentor.OwinCookieSaver.Tests", "Kentor.OwinCookieSaver.Tests\Kentor.OwinCookieSaver.Tests.csproj", "{BAE7B59D-42CF-4E32-A0E7-7090071DBE5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E6B7891-309C-4014-9B5A-54477B0E22E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6B7891-309C-4014-9B5A-54477B0E22E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6B7891-309C-4014-9B5A-54477B0E22E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6B7891-309C-4014-9B5A-54477B0E22E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21CEFCA1-E4EE-4581-8F10-F91C6C6F77E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21CEFCA1-E4EE-4581-8F10-F91C6C6F77E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21CEFCA1-E4EE-4581-8F10-F91C6C6F77E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21CEFCA1-E4EE-4581-8F10-F91C6C6F77E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAE7B59D-42CF-4E32-A0E7-7090071DBE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAE7B59D-42CF-4E32-A0E7-7090071DBE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAE7B59D-42CF-4E32-A0E7-7090071DBE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAE7B59D-42CF-4E32-A0E7-7090071DBE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

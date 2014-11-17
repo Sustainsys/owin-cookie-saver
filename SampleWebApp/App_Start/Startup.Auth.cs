@@ -19,7 +19,6 @@ namespace SampleWebApp.App_Start
                 {
                     if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")))
                     {
-
                     }
                     await next.Invoke();
                 });
