@@ -15,6 +15,8 @@ namespace Kentor.OwinCookieSaver
 
         public async override Task Invoke(IOwinContext context)
         {
+            await Next.Invoke(context);
+
             var setCookie = context.Response.Headers.GetValues("Set-Cookie");
             if(setCookie != null)
             {
@@ -28,8 +30,6 @@ namespace Kentor.OwinCookieSaver
                     }
                 }
             }
-            
-            await Next.Invoke(context);
         }
     }
 }

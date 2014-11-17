@@ -50,6 +50,11 @@ namespace Kentor.OwinCookieSaver.Tests
             public override Task Invoke(IOwinContext context)
             {
                 callingContext = context;
+
+                context.Response.Headers.Add("Set-Cookie", new[]
+                {
+                    "OwinCookie=OwinValue; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly"
+                });
                 return Task.FromResult(0);
             }
         }
@@ -73,10 +78,6 @@ namespace Kentor.OwinCookieSaver.Tests
             HttpContext.Current.Response.Cookies.Add(new HttpCookie("SystemWebCookie", "SystemWebValue"));
 
             var context = new OwinContext();
-            context.Response.Headers.Add("Set-Cookie", new[] 
-                { 
-                    "OwinCookie=OwinValue; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly"
-                });
 
             var next = new MiddlewareMock();
 
