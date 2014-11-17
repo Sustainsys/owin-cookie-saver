@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Bug Reproduced Results";
+    ViewBag.Title = "Fixed Results";
 }
 
 <h2>Expected Results</h2>
@@ -9,8 +9,8 @@
     actual request.
 </p>
 <p>
-    There should also have been an ASP.Net.Cookies auth cookie, but it is
-    removed by the bug.
+    There should also bee an ASP.Net.Cookies auth cookie, both in the cookies
+    collection and as a cookie header.
 </p>
 
 <h2>Request.Cookies</h2>
@@ -64,5 +64,5 @@ else
 }
 
 <p>
-    @Html.ActionLink("Restart Test", "Index", "Reproduction", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Restart Test", "Index", "Fixed", null, new { @class = "btn btn-default" })
 </p>

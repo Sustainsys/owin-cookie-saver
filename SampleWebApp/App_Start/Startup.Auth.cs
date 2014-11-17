@@ -15,6 +15,15 @@ namespace SampleWebApp.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
+            app.Use(async (context, next) =>
+                {
+                    if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")))
+                    {
+
+                    }
+                    await next.Invoke();
+                });
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
             // Simulate an external login middleware for any Url ending with SetAuthCookie
