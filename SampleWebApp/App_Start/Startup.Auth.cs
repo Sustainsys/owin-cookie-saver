@@ -6,6 +6,8 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.Owin.Security.Cookies;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Kentor.OwinCookieSaver;
 
 [assembly: OwinStartup(typeof(SampleWebApp.App_Start.Startup))]
 
@@ -13,15 +15,27 @@ namespace SampleWebApp.App_Start
 {
     public class Startup
     {
+        class ConditionalMiddlewareInvoker : OwinMiddleware
+        {
+            public ConditionalMiddlewareInvoker(OwinMiddleware next)
+                : base(next) { }
+
+            public async override Task Invoke(IOwinContext context)
+            {
+                if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")))
+                {
+                    await (new KentorOwinCookieSaverMiddleware(Next)).Invoke(context);
+                }
+                else
+                {
+                    await Next.Invoke(context);
+                }
+            }
+        }
+
         public void Configuration(IAppBuilder app)
         {
-            app.Use(async (context, next) =>
-                {
-                    if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")))
-                    {
-                    }
-                    await next.Invoke();
-                });
+            app.Use(typeof(ConditionalMiddlewareInvoker));
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
@@ -29,7 +43,7 @@ namespace SampleWebApp.App_Start
             app.Use(async (context, next) =>
                 {
                     var lastPart = context.Request.Path.Value.Split('/').Last();
-                    if(lastPart == "SetAuthCookie")
+                    if (lastPart == "SetAuthCookie")
                     {
                         var identity = new ClaimsIdentity("Cookies");
                         identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "NameId"));
