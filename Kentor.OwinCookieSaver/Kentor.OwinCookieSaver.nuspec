@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/KentorIT/owin-cookie-saver/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/KentorIT/owin-cookie-saver</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/KentorIT/owin-cookie-saver/master/Kentor.OwinCookieSaver/Kentor.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First release of Kentor Owin Cookie Saver.</releaseNotes>
+    <copyright>Copyright Kentor and Contributors 2014</copyright>
+    <tags>OWIN</tags>
+  </metadata>
+</package>
