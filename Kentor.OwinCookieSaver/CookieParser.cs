@@ -35,6 +35,12 @@ namespace Kentor.OwinCookieSaver
                         case "HttpOnly":
                             cookie.HttpOnly = true;
                             break;
+                        case "Path":
+                            cookie.Path = kv.Value;
+                            break;
+                        case "Domain":
+                            cookie.Domain = kv.Value;
+                            break;
                     }
                 }
 

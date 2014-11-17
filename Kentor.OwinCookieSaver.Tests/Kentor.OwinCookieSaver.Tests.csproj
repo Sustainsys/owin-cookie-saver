@@ -71,6 +71,7 @@
     <Compile Include="KentorOwinCookieSaverExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KentorOwinCookieSaverMiddlewareTests.cs" />
+    <Compile Include="CookieParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
