@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Kentor.OwinCookieSaver
 {
@@ -14,6 +15,20 @@ namespace Kentor.OwinCookieSaver
 
         public async override Task Invoke(IOwinContext context)
         {
+            var setCookie = context.Response.Headers.GetValues("Set-Cookie");
+            if(setCookie != null)
+            {
+                var cookies = CookieParser.Parse(setCookie);
+                
+                foreach(var c in cookies)
+                {
+                    if(!HttpContext.Current.Response.Cookies.AllKeys.Contains(c.Name))
+                    {
+                        HttpContext.Current.Response.Cookies.Add(c);
+                    }
+                }
+            }
+            
             await Next.Invoke(context);
         }
     }
