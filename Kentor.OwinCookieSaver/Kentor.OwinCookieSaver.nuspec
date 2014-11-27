@@ -11,7 +11,7 @@
     <iconUrl>https://raw.githubusercontent.com/KentorIT/owin-cookie-saver/master/Kentor.OwinCookieSaver/Kentor.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release of Kentor Owin Cookie Saver.</releaseNotes>
+    <releaseNotes>Bug fix, removing duplicate Set-Cookie headers.</releaseNotes>
     <copyright>Copyright Kentor and Contributors 2014</copyright>
     <tags>OWIN</tags>
   </metadata>
