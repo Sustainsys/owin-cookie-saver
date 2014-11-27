@@ -40,9 +40,14 @@ namespace Kentor.OwinCookieSaver
                 
                 foreach(var c in cookies)
                 {
-                    // Mark the cookie as coming from a header, to prevent
-                    // System.Web from adding it again.
-                    fromHeaderProperty.SetValue(c, true);
+                    // Guard for stability, preventing nullref exception
+                    // in case private reflection breaks.
+                    if (fromHeaderProperty != null)
+                    {
+                        // Mark the cookie as coming from a header, to prevent
+                        // System.Web from adding it again.
+                        fromHeaderProperty.SetValue(c, true);
+                    }
 
                     if(!HttpContext.Current.Response.Cookies.AllKeys.Contains(c.Name))
                     {
