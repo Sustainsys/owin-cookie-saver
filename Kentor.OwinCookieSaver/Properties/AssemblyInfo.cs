@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OwinCookieSaver")]
+[assembly: AssemblyTitle("Kentor.OwinCookieSaver")]
 [assembly: AssemblyDescription("Workaround Middleware for Katana Bug #197")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Kentor")]
