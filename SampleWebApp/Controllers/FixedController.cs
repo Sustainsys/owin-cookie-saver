@@ -19,15 +19,7 @@ namespace SampleWebApp.Controllers
         public ActionResult ClearCookies()
         {
             // Then abandon the session and clear all cookies to start clean.
-            Session.Abandon();
-
-            foreach (var cookie in Request.Cookies.Cast<string>().ToList())
-            {
-                Response.Cookies.Set(new HttpCookie(cookie)
-                {
-                    Expires = DateTime.Now.AddYears(-1)
-                });
-            }
+            HttpContext.ClearAllCookies();
 
             return RedirectToAction("SetAuthCookie");
         }

@@ -22,7 +22,8 @@ namespace SampleWebApp.App_Start
 
             public async override Task Invoke(IOwinContext context)
             {
-                if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")))
+                if (context.Request.Path.StartsWithSegments(new PathString("/Fixed")) ||
+                    context.Request.Path.StartsWithSegments(new PathString("/DuplicateSetCookieHeader")))
                 {
                     await (new KentorOwinCookieSaverMiddleware(Next)).Invoke(context);
                 }

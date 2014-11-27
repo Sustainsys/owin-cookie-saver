@@ -1,0 +1,29 @@
+﻿@model IEnumerable<string>
+@{
+    ViewBag.Title = "Set-Cookie Results";
+}
+
+<h2>Results for Duplicate Set-Cookie header test</h2>
+<p>
+    When the Owin cookies are added to the response cookie collection,
+    it looks to System.Web that they are new. Because of that, they are
+    added once more resulting in duplicate headers...
+</p>
+
+<h2>Set-Cookie http headers</h2>
+<table>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>
+                    @s
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    @Html.ActionLink("Restart Test", "Index", null, new { @class = "btn btn-default" })
+</p>

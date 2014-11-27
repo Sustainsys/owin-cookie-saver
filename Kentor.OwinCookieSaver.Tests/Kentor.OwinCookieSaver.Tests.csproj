@@ -68,6 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="HttpCookieExtensions.cs" />
     <Compile Include="KentorOwinCookieSaverExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KentorOwinCookieSaverMiddlewareTests.cs" />

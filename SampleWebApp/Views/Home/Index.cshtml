@@ -6,7 +6,7 @@
     <h1>Owin Cookie Saver</h1>
     <p class="lead">Owin Cookie Saver sample application.</p>
     <p>
-        The <a href="https://katanaproject.codeplex.com/workitem/197" target="_blank">Katana bug #19</a> makes
+        The <a href="https://katanaproject.codeplex.com/workitem/197" target="_blank">Katana bug #197</a> makes
         cookies set through the Owin API sometimes dissappear, especially in applications that use ASP.NET
         Sessions. This is a test application for the Owin Cookie Saver middleware that mitigates the bug
         for cookies set by other owin middleware.
@@ -27,5 +27,14 @@
             Test sequence to prove that the cookie survives with the fix middleware activated.
         </p>
         <p>@Html.ActionLink("Start", "Index", "Fixed", null, new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Duplicate Set-Cookie</h2>
+        <p>
+            There is an <a href="https://github.com/KentorIT/owin-cookie-saver/issues/1" target="_blank">
+            issue</a> in version 1.0.0 of the cookie saver, that sometimes creates
+            duplicate Set-Cookie headers. This is a test for that.
+        </p>
+        <p>@Html.ActionLink("Start", "SetAuthCookie", "DuplicateSetCookieHeader", null, new { @class="btn btn-default" })</p>
     </div>
 </div>
