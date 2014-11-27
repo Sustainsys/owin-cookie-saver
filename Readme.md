@@ -11,7 +11,7 @@ by Owin mysteriously disappear on some occasions.
 This middleware is a fix for that bug. Simple add it *before* the any cookie
 handling middleware and it will preserve the authentication cookies.
 
-    app.UseKentorCookieMiddlewareSaver();
+    app.UseKentorOwinCookieSaver();
     
     app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
