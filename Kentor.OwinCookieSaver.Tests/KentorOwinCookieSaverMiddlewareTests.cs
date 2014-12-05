@@ -77,7 +77,7 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_AddsOwinCookies()
+        public async Task KentorOwinCookieSaverMiddleware_AddsOwinCookies()
         {
             var context = CreateOwinContext();
 
@@ -89,7 +89,7 @@ namespace Kentor.OwinCookieSaver.Tests
 
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
             httpContext.Response.Cookies.AllKeys.Should().Contain("OwinCookie");
 
@@ -108,13 +108,13 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_RoundtripsComplexCookie()
+        public async Task KentorOwinCookieSaverMiddleware_RoundtripsComplexCookie()
         {
             var context = CreateOwinContext();
             var next = new MiddlewareMock();
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
             // The first cookie is 85 chars long.
             var before = context.Response.Headers["Set-Cookie"].Substring(0, 85);
@@ -126,13 +126,13 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_RoundtripsMinimalCookie()
+        public async Task KentorOwinCookieSaverMiddleware_RoundtripsMinimalCookie()
         {
             var context = CreateOwinContext();
             var next = new MiddlewareMock();
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
             // The interesting cookie is at offset 86 and is 26 chars long.
             var before = context.Response.Headers["Set-Cookie"].Substring(86, 26);
