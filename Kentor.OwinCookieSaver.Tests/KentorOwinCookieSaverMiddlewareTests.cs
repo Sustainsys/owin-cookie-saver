@@ -143,6 +143,19 @@ namespace Kentor.OwinCookieSaver.Tests
             rebuiltHeader.Should().Be(before);
         }
 
+        [TestMethod]
+        public async Task KentorOwinCookieSaverMiddleware_HandlesMissingHttpContext()
+        {
+            var context = new OwinContext();
+
+            var next = new MiddlewareMock();
+
+            var subject = new KentorOwinCookieSaverMiddleware(next);
+
+            // Should not throw.
+            await subject.Invoke(context);
+        }
+
         private static IEnumerable<string> RegenerateSetCookieHeader(IOwinContext context)
         {
             var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);

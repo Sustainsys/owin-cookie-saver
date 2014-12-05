@@ -12,7 +12,7 @@ namespace Kentor.OwinCookieSaver
     /// <summary>
     /// Cookie saving middleware.
     /// </summary>
-    public class KentorOwinCookieSaverMiddleware: OwinMiddleware
+    public class KentorOwinCookieSaverMiddleware : OwinMiddleware
     {
         /// <summary>
         /// Ctor
@@ -34,11 +34,11 @@ namespace Kentor.OwinCookieSaver
             await Next.Invoke(context);
 
             var setCookie = context.Response.Headers.GetValues("Set-Cookie");
-            if(setCookie != null)
+            if (setCookie != null)
             {
                 var cookies = CookieParser.Parse(setCookie);
-                
-                foreach(var c in cookies)
+
+                foreach (var c in cookies)
                 {
                     // Guard for stability, preventing nullref exception
                     // in case private reflection breaks.
@@ -55,7 +55,8 @@ namespace Kentor.OwinCookieSaver
                     // instead.
                     var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
 
-                    if(!httpContext.Response.Cookies.AllKeys.Contains(c.Name))
+                    if (httpContext != null &&
+                        !httpContext.Response.Cookies.AllKeys.Contains(c.Name))
                     {
                         httpContext.Response.Cookies.Add(c);
                     }
