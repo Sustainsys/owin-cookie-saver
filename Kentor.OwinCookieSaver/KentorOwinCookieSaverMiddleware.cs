@@ -49,9 +49,15 @@ namespace Kentor.OwinCookieSaver
                         fromHeaderProperty.SetValue(c, true);
                     }
 
-                    if(!HttpContext.Current.Response.Cookies.AllKeys.Contains(c.Name))
+                    // HttpContext.Current turns to null in some cases after the
+                    // async call to Next.Invoke() when run in a web forms
+                    // application. Let's grab it from the owin environment
+                    // instead.
+                    var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
+
+                    if(!httpContext.Response.Cookies.AllKeys.Contains(c.Name))
                     {
-                        HttpContext.Current.Response.Cookies.Add(c);
+                        httpContext.Response.Cookies.Add(c);
                     }
                 }
             }
