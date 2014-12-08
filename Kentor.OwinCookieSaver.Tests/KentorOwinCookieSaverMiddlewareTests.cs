@@ -18,21 +18,18 @@ namespace Kentor.OwinCookieSaver.Tests
     [TestClass]
     public class KentorOwinCookieSaverMiddlewareTests
     {
-        [TestInitialize]
-        public void SetHttpContextCurrent()
+        public OwinContext CreateOwinContext()
         {
             var httpRequest = new HttpRequest("", "http://localhost/", "");
             var stringWriter = new StringWriter();
             var httpResponce = new HttpResponse(stringWriter);
-            var httpContext = new HttpContext(httpRequest, httpResponce);
+            var httpContext = new HttpContextWrapper(new HttpContext(httpRequest, httpResponce));
 
-            HttpContext.Current = httpContext;
-        }
+            var context = new OwinContext();
 
-        [TestCleanup]
-        public void ClearHttpContextCurrent()
-        {
-            HttpContext.Current = null;
+            context.Environment[typeof(HttpContextBase).FullName] = httpContext;
+
+            return context;
         }
 
         class MiddlewareMock : OwinMiddleware
@@ -70,7 +67,7 @@ namespace Kentor.OwinCookieSaver.Tests
         public async Task KentorOwinCookieSaverMiddleware_InvokesNext()
         {
             var next = new MiddlewareMock();
-            var context = new OwinContext();
+            var context = CreateOwinContext();
 
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
@@ -80,21 +77,23 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_AddsOwinCookies()
+        public async Task KentorOwinCookieSaverMiddleware_AddsOwinCookies()
         {
-            HttpContext.Current.Response.Cookies.Add(new HttpCookie("SystemWebCookie", "SystemWebValue"));
+            var context = CreateOwinContext();
 
-            var context = new OwinContext();
+            var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
+
+            httpContext.Response.Cookies.Add(new HttpCookie("SystemWebCookie", "SystemWebValue"));
 
             var next = new MiddlewareMock();
 
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
-            HttpContext.Current.Response.Cookies.AllKeys.Should().Contain("OwinCookie");
+            httpContext.Response.Cookies.AllKeys.Should().Contain("OwinCookie");
 
-            var cookie = HttpContext.Current.Response.Cookies["OwinCookie"];
+            var cookie = httpContext.Response.Cookies["OwinCookie"];
 
             // Time will be parsed to a local time, taking time zone into account. So let's parse the given
             // time and then convert it to local time.
@@ -109,49 +108,66 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_RoundtripsComplexCookie()
+        public async Task KentorOwinCookieSaverMiddleware_RoundtripsComplexCookie()
         {
-            var context = new OwinContext();
+            var context = CreateOwinContext();
             var next = new MiddlewareMock();
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
             // The first cookie is 85 chars long.
             var before = context.Response.Headers["Set-Cookie"].Substring(0, 85);
 
-            var rebuiltHeader = RegenerateSetCookieHeader().Single(s => s.StartsWith("OwinCookie"));
+            var rebuiltHeader = RegenerateSetCookieHeader(context)
+                .Single(s => s.StartsWith("OwinCookie"));
 
             rebuiltHeader.Should().Be(before);
         }
 
         [TestMethod]
-        public void KentorOwinCookieSaverMiddleware_RoundtripsMinimalCookie()
+        public async Task KentorOwinCookieSaverMiddleware_RoundtripsMinimalCookie()
         {
-            var context = new OwinContext();
+            var context = CreateOwinContext();
             var next = new MiddlewareMock();
             var subject = new KentorOwinCookieSaverMiddleware(next);
 
-            subject.Invoke(context);
+            await subject.Invoke(context);
 
             // The interesting cookie is at offset 86 and is 26 chars long.
             var before = context.Response.Headers["Set-Cookie"].Substring(86, 26);
 
-            var rebuiltHeader = RegenerateSetCookieHeader().Single(s => s.StartsWith("MinimalCookie"));
+            var rebuiltHeader = RegenerateSetCookieHeader(context)
+                .Single(s => s.StartsWith("MinimalCookie"));
 
             rebuiltHeader.Should().Be(before);
         }
 
-        private static IEnumerable<string> RegenerateSetCookieHeader()
+        [TestMethod]
+        public async Task KentorOwinCookieSaverMiddleware_HandlesMissingHttpContext()
         {
+            var context = new OwinContext();
+
+            var next = new MiddlewareMock();
+
+            var subject = new KentorOwinCookieSaverMiddleware(next);
+
+            // Should not throw.
+            await subject.Invoke(context);
+        }
+
+        private static IEnumerable<string> RegenerateSetCookieHeader(IOwinContext context)
+        {
+            var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
+
             // Copied and adapted the code that regenerates the Set-Cookie header from 
             // System.Web.GenerateResponseHeadersForCookies and System.Web.HttpCookie.GetSetCookieHeader
 
             // write all the cookies again
-            for (int c = 0; c < HttpContext.Current.Response.Cookies.Count; c++)
+            for (int c = 0; c < httpContext.Response.Cookies.Count; c++)
             {
                 // generate a Set-Cookie header for each cookie
-                var cookie = HttpContext.Current.Response.Cookies[c];
+                var cookie = httpContext.Response.Cookies[c];
 
                 StringBuilder s = new StringBuilder();
 
