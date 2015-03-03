@@ -20,7 +20,7 @@ The middleware is available as a nuget package,
 [Kentor.OwinCookieSaver](https://www.nuget.org/packages/Kentor.OwinCookieSaver/).
 
 ##Limitations
-Due to have the cookies are handled, this middleware is only able to save
+Due to how the cookies are handled, this middleware is only able to save
 cookies that are added by middleware; such as the authentication cookie. It won't
 save cookies handled by normal MVC Actions. In that case, the workaround
 of adding a dummy session value is recommended (if the application uses session,
