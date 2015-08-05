@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Kentor.OwinCookieSaver
 
                     if("Expires".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
-                        cookie.Expires = DateTime.Parse(kv.Value);
+                        cookie.Expires = DateTime.Parse(kv.Value, CultureInfo.InvariantCulture);
                     }
                     else if("Secure".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
