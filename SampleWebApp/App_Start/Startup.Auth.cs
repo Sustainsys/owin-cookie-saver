@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Kentor.OwinCookieSaver;
+using Microsoft.Owin.Extensions;
 
 [assembly: OwinStartup(typeof(SampleWebApp.App_Start.Startup))]
 
@@ -37,6 +38,7 @@ namespace SampleWebApp.App_Start
         public void Configuration(IAppBuilder app)
         {
             app.Use(typeof(ConditionalMiddlewareInvoker));
+            app.UseStageMarker(PipelineStage.Authenticate);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
