@@ -8,12 +8,17 @@ ASP.NET MVC5.
 The [bug](https://katanaproject.codeplex.com/workitem/197) makes cookies set
 by Owin mysteriously disappear on some occasions.
 
-This middleware is a fix for that bug. Simple add it *before* the any cookie
+This middleware is a fix for that bug. Simple add it *before* any cookie
 handling middleware and it will preserve the authentication cookies.
 
     app.UseKentorOwinCookieSaver();
     
     app.UseCookieAuthentication(new CookieAuthenticationOptions());
+
+In some cases, a pipeline stage specification might be needed. Using SignalR 
+without other middleware containing a stage marker is such a case.
+
+    app.UseKentorOwinCookieSaver(PipelineStage.Authenticate);
 
 ##Nuget package
 The middleware is available as a nuget package, 

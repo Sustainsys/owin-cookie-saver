@@ -11,8 +11,9 @@
     <iconUrl>https://raw.githubusercontent.com/KentorIT/owin-cookie-saver/master/Kentor.OwinCookieSaver/Kentor.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Bug fix, removing duplicate Set-Cookie headers.</releaseNotes>
-    <copyright>Copyright Kentor and Contributors 2014</copyright>
+    <releaseNotes>* Bug fix for systems cultures with non-Gregorian calendars.
+ * Support for pipeline stage specification.</releaseNotes>
+    <copyright>Copyright Kentor and Contributors 2014-2015</copyright>
     <tags>OWIN</tags>
   </metadata>
 </package>
