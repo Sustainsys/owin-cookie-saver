@@ -36,6 +36,12 @@ namespace SampleWebApp.App_Start
 
         public void Configuration(IAppBuilder app)
         {
+            // In normal applications, the cookie saver middleware would be
+            // registered here. In this proof of concept application however
+            // we want to be able to show the behaviour both with and without
+            // the cookie saver middleware enabled. Because of this a hack is
+            // used that only enables the cookie saver middleware when invoked
+            // on certain paths.
             app.Use(typeof(ConditionalMiddlewareInvoker));
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
