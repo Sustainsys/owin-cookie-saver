@@ -19,5 +19,15 @@ namespace Kentor.OwinCookieSaver.Tests
 
             app.Received().Use(typeof(KentorOwinCookieSaverMiddleware));
         }
+
+        [TestMethod]
+        public void KentorOwinCookieSaverExtensions_Use_With_Stage_RegistersMiddleware()
+        {
+            var app = Substitute.For<IAppBuilder>();
+
+            app.UseKentorOwinCookieSaver(PipelineStage.Authenticate);
+
+            app.Received().Use(typeof(KentorOwinCookieSaverMiddleware));
+        }
     }
 }
