@@ -23,11 +23,13 @@ namespace Kentor.OwinCookieSaver.Tests
             var httpRequest = new HttpRequest("", "http://localhost/", "");
             var stringWriter = new StringWriter();
             var httpResponce = new HttpResponse(stringWriter);
-            var httpContext = new HttpContextWrapper(new HttpContext(httpRequest, httpResponce));
+            var httpContext = new HttpContext(httpRequest, httpResponce);
+            var httpContextBase = new HttpContextWrapper(httpContext);
 
             var context = new OwinContext();
 
-            context.Environment[typeof(HttpContextBase).FullName] = httpContext;
+            context.Environment[typeof(HttpContextBase).FullName] = httpContextBase;
+            context.Environment[typeof(HttpContext).FullName] = httpContext;
 
             return context;
         }
@@ -154,6 +156,31 @@ namespace Kentor.OwinCookieSaver.Tests
 
             // Should not throw.
             await subject.Invoke(context);
+        }
+
+        [TestMethod]
+        public async Task KentorOwinCookieSaverMiddleware_AbortsOnHeadersSent()
+        {
+            var context = CreateOwinContext();
+            var next = new MiddlewareMock();
+            var subject = new KentorOwinCookieSaverMiddleware(next);
+
+            // The property has an internal setter.
+            var headersWrittenProperty = typeof(HttpResponse)
+                .GetProperty("HeadersWritten");
+
+            headersWrittenProperty.GetSetMethod(true).Invoke(
+                context.Environment[typeof(HttpContext).FullName]
+                    .As<HttpContext>().Response,
+                new object[] { true });
+
+            await subject.Invoke(context);
+
+            // With headers already written, the middleware should not try
+            // to write to the cookie collection.
+            context.Environment[typeof(HttpContextBase).FullName]
+                .As<HttpContextBase>().Response.Cookies
+                .Should().BeEmpty();
         }
 
         private static IEnumerable<string> RegenerateSetCookieHeader(IOwinContext context)

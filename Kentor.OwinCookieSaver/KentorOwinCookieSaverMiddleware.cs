@@ -55,8 +55,9 @@ namespace Kentor.OwinCookieSaver
                     // instead.
                     var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
 
-                    if (httpContext != null &&
-                        !httpContext.Response.Cookies.AllKeys.Contains(c.Name))
+                    if (httpContext != null
+                        && !httpContext.Response.HeadersWritten
+                        && !httpContext.Response.Cookies.AllKeys.Contains(c.Name))
                     {
                         httpContext.Response.Cookies.Add(c);
                     }
