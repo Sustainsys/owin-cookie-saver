@@ -1,12 +1,13 @@
-#Kentor.OwinCookieSaver
+# Kentor.OwinCookieSaver
 
 There is a bug in Microsoft's Owin implementation for System.Web. The one that
 is being used when running Owin applications on IIS. Which is what probably
 99% of us do, if we're using the new Owin-based authentication handling with
 ASP.NET MVC5.
 
-The [bug](https://katanaproject.codeplex.com/workitem/197) makes cookies set
-by Owin mysteriously disappear on some occasions.
+The makes cookies set by Owin mysteriously disappear on some occasions. There
+is some [documentation](https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues)
+from Microsoft on workarounds, but this middleware offers another solution.
 
 This middleware is a fix for that bug. Simple add it *before* any cookie
 handling middleware and it will preserve the authentication cookies.
@@ -32,6 +33,8 @@ of adding a dummy session value is recommended (if the application uses session,
 which is the most likely reason to be affected by this bug).
 
 ##Plans for a Real Fix
-We're looking into contributing the fix directly to Katana to make this
-middleware redundant. That would also make the fix work for all cookies
-and not only those added by authentication middleware.
+I've discussed contributing the functionality of this library directly to
+Katana to make this middleware redundant. However Microsoft do not want
+this behaviour added as it can affect cookie behaviour. In some cases it will
+loose newer flags on cookies. As ASP.NET Core is the clearly the route forward,
+there will be no more substantial development on this library.
