@@ -12,7 +12,7 @@ namespace Kentor.OwinCookieSaver
     {
         public static IEnumerable<HttpCookie> Parse(IList<string> setCookieHeader)
         {
-            foreach(var c in setCookieHeader)
+            foreach (var c in setCookieHeader)
             {
                 var segments = c.Split(';');
 
@@ -29,19 +29,19 @@ namespace Kentor.OwinCookieSaver
                 {
                     var kv = GetKeyValue(segments[i]);
 
-                    if("Expires".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
+                    if "Expires".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
                         cookie.Expires = DateTime.Parse(kv.Value, CultureInfo.InvariantCulture);
                     }
-                    else if("Secure".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
+                    else if ("Secure".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
                         cookie.Secure = true;
                     }
-                    else if("HttpOnly".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
+                    else if ("HttpOnly".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
                         cookie.HttpOnly = true;
                     }
-                    else if("Path".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
+                    else if ("Path".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
                         cookie.Path = kv.Value;
                     }
@@ -49,6 +49,10 @@ namespace Kentor.OwinCookieSaver
                     {
                         cookie.Domain = kv.Value;
                     }
+                    else if ("SameSite".Equals(kv.Key, StringComparison.OrdinalIgnoreCase) &&
+                             Enum.TryParse(kv.Value, var out enumValue))
+                        cookie.SameSite = (SameSiteMode)enumValue;
+                    }                                 
                 }
 
                 yield return cookie;
