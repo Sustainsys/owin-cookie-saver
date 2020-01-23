@@ -32,7 +32,7 @@ namespace Kentor.OwinCookieSaver.Tests
         {
             var cookieHeader = new List<string>()
             {
-                "Name=Value; Domain=example.com; Expires=Wed, 13 Jan 2021, 22:23:01 GMT; HttpOnly; Secure; Path=/SomePath"
+                "Name=Value; Domain=example.com; Expires=Wed, 13 Jan 2021, 22:23:01 GMT; HttpOnly; Secure; Path=/SomePath; SameSite=Strict"
             };
 
             var result = CookieParser.Parse(cookieHeader).Single();
@@ -43,7 +43,8 @@ namespace Kentor.OwinCookieSaver.Tests
                 Expires = new DateTime(2021, 01, 13, 22, 23, 01, DateTimeKind.Utc).ToLocalTime(),
                 HttpOnly = true,
                 Path = "/SomePath",
-                Secure = true
+                Secure = true,
+                SameSite = SameSiteMode.Strict
             };
 
             result.ShouldBeEquivalentTo(expected);

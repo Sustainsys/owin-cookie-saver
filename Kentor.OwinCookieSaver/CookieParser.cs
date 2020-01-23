@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Kentor.OwinCookieSaver
@@ -29,7 +26,7 @@ namespace Kentor.OwinCookieSaver
                 {
                     var kv = GetKeyValue(segments[i]);
 
-                    if "Expires".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
+                    if ("Expires".Equals(kv.Key, StringComparison.OrdinalIgnoreCase))
                     {
                         cookie.Expires = DateTime.Parse(kv.Value, CultureInfo.InvariantCulture);
                     }
@@ -50,9 +47,10 @@ namespace Kentor.OwinCookieSaver
                         cookie.Domain = kv.Value;
                     }
                     else if ("SameSite".Equals(kv.Key, StringComparison.OrdinalIgnoreCase) &&
-                             Enum.TryParse(kv.Value, var out enumValue))
-                        cookie.SameSite = (SameSiteMode)enumValue;
-                    }                                 
+                        Enum.TryParse(kv.Value, out SameSiteMode sameSiteMode))
+                    {
+                        cookie.SameSite = sameSiteMode;
+                    }                              
                 }
 
                 yield return cookie;
