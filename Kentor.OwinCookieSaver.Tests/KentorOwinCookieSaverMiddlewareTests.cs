@@ -22,8 +22,8 @@ namespace Kentor.OwinCookieSaver.Tests
         {
             var httpRequest = new HttpRequest("", "http://localhost/", "");
             var stringWriter = new StringWriter();
-            var httpResponce = new HttpResponse(stringWriter);
-            var httpContext = new HttpContext(httpRequest, httpResponce);
+            var httpResponse = new HttpResponse(stringWriter);
+            var httpContext = new HttpContext(httpRequest, httpResponse);
             var httpContextBase = new HttpContextWrapper(httpContext);
 
             var context = new OwinContext();
@@ -36,6 +36,9 @@ namespace Kentor.OwinCookieSaver.Tests
 
         class MiddlewareMock : OwinMiddleware
         {
+            public const string OwinCookie = "OwinCookie=OwinValue; expires=Wed, 13-Jan-2021 22:23:01 GMT; path=/; secure; HttpOnly; SameSite=Strict";
+            public const string MinimalCookie = "MinimalCookie=MinimalValue";
+
             public MiddlewareMock() : base(null) { }
 
             public IOwinContext callingContext = null;
@@ -46,8 +49,8 @@ namespace Kentor.OwinCookieSaver.Tests
 
                 context.Response.Headers.Add("Set-Cookie", new[]
                 {
-                    "OwinCookie=OwinValue; expires=Wed, 13-Jan-2021 22:23:01 GMT; path=/; secure; HttpOnly",
-                    "MinimalCookie=MinimalValue"
+                    OwinCookie,
+                    MinimalCookie
                 });
 
                 context.Response.Cookies.Append("ComplexCookie", "ComplexValue", new CookieOptions 
@@ -94,6 +97,7 @@ namespace Kentor.OwinCookieSaver.Tests
             await subject.Invoke(context);
 
             httpContext.Response.Cookies.AllKeys.Should().Contain("OwinCookie");
+            httpContext.Response.Cookies.AllKeys.Should().Contain("SystemWebCookie", because: "The original cookie should not be removed");
 
             var cookie = httpContext.Response.Cookies["OwinCookie"];
 
@@ -106,11 +110,34 @@ namespace Kentor.OwinCookieSaver.Tests
             cookie.Expires.Should().Be(expectedExpires);
             cookie.Secure.Should().BeTrue("cookie string contains Secure");
             cookie.HttpOnly.Should().BeTrue("cookie string contains HttpOnly");
-            cookie.IsFromHeader().Should().BeTrue();
+            cookie.SameSite.Should().Be(SameSiteMode.Strict, "cookie string contains Strict SameSite setting");
+            //cookie.IsFromHeader().Should().BeTrue();
         }
 
         [TestMethod]
-        public async Task KentorOwinCookieSaverMiddleware_RoundtripsComplexCookie()
+        public async Task KentorOwinCookieSaverMiddleware_ShouldNotOverwriteResponseCookie()
+        {
+            var context = CreateOwinContext();
+
+            var httpContext = context.Get<HttpContextBase>(typeof(HttpContextBase).FullName);
+
+            httpContext.Response.Cookies.Add(new HttpCookie("OwinCookie", "TheOriginalCookie"));
+
+            var next = new MiddlewareMock();
+
+            var subject = new KentorOwinCookieSaverMiddleware(next);
+
+            await subject.Invoke(context);
+
+            httpContext.Response.Cookies.AllKeys.Should().Contain("OwinCookie");
+
+            var cookie = httpContext.Response.Cookies["OwinCookie"];
+            cookie.Should().NotBeNull();
+            cookie.Value.Should().Be("TheOriginalCookie");
+        }
+
+        [TestMethod]
+        public async Task KentorOwinCookieSaverMiddleware_RoundTripsComplexCookie()
         {
             var context = CreateOwinContext();
             var next = new MiddlewareMock();
@@ -118,8 +145,7 @@ namespace Kentor.OwinCookieSaver.Tests
 
             await subject.Invoke(context);
 
-            // The first cookie is 85 chars long.
-            var before = context.Response.Headers["Set-Cookie"].Substring(0, 85);
+            var before = MiddlewareMock.OwinCookie;
 
             var rebuiltHeader = RegenerateSetCookieHeader(context)
                 .Single(s => s.StartsWith("OwinCookie"));
@@ -128,7 +154,7 @@ namespace Kentor.OwinCookieSaver.Tests
         }
 
         [TestMethod]
-        public async Task KentorOwinCookieSaverMiddleware_RoundtripsMinimalCookie()
+        public async Task KentorOwinCookieSaverMiddleware_RoundTripsMinimalCookie()
         {
             var context = CreateOwinContext();
             var next = new MiddlewareMock();
@@ -136,8 +162,7 @@ namespace Kentor.OwinCookieSaver.Tests
 
             await subject.Invoke(context);
 
-            // The interesting cookie is at offset 86 and is 26 chars long.
-            var before = context.Response.Headers["Set-Cookie"].Substring(86, 26);
+            var before = MiddlewareMock.MinimalCookie;
 
             var rebuiltHeader = RegenerateSetCookieHeader(context)
                 .Single(s => s.StartsWith("MinimalCookie"));
@@ -250,6 +275,12 @@ namespace Kentor.OwinCookieSaver.Tests
                 if (cookie.HttpOnly)
                 {
                     s.Append("; HttpOnly");
+                }
+
+                if (Enum.IsDefined(typeof(SameSiteMode), cookie.SameSite))
+                {
+                    s.Append("; SameSite=");
+                    s.Append(cookie.SameSite.ToString());
                 }
 
                 yield return s.ToString();
