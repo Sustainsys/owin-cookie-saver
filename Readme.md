@@ -1,8 +1,18 @@
-# Kentor.OwinCookieSaver
+# This library is a Legacy Solution
+When this library was created, back in 2014, this was a viable solution to the Owin
+Cookie problem. It no longer is. Please do not use it, instead follow the
+[Microsoft Recommendation](https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues)
+to use a SystemWebCookieManager.
+
+# Historical Contents of Readme
+*This content is only kept for reference, the information in the following
+sections is no longer accurate.*
+
+## Kentor.OwinCookieSaver
 
 There is a bug in Microsoft's Owin implementation for System.Web. The one that
 is being used when running Owin applications on IIS. Which is what probably
-99% of us do, if we're using the new Owin-based authentication handling with
+99% of us do, if we're using the Owin-based authentication handling with
 ASP.NET MVC5.
 
 The makes cookies set by Owin mysteriously disappear on some occasions. There
