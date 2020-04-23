@@ -11,8 +11,11 @@
     <iconUrl>https://raw.githubusercontent.com/KentorIT/owin-cookie-saver/master/Kentor.OwinCookieSaver/Kentor.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Bug fix: Do not attempt to update cookies if headers have been sent.</releaseNotes>
-    <copyright>Copyright Kentor and Contributors 2014-2016</copyright>
+    <releaseNotes>
+      v1.1.1 Bug fix: Do not attempt to update cookies if headers have been sent.
+      v2.0.0 Update: Retain SameSite cookie setting.
+    </releaseNotes>
+    <copyright>Copyright Sustainsys and Contributors 2014-2020</copyright>
     <tags>OWIN</tags>
   </metadata>
 </package>
